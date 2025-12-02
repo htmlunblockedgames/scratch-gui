@@ -19161,7 +19161,7 @@ const CustomExtensionModal = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODUL
   value: props.url,
   onChange: props.onChangeURL,
   onKeyDown: props.onKeyDown,
-  placeholder: "https://extensions.turbowarp.org/...",
+  placeholder: "https://your-domain.example/extensions/...",
   autoFocus: true
 })) : props.type === 'file' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, {
   key: props.type
@@ -26337,14 +26337,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/log */ "./src/lib/log.js");
 /* harmony import */ var _lib_libraries_extensions_index_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/libraries/extensions/index.jsx */ "./src/lib/libraries/extensions/index.jsx");
 /* harmony import */ var _lib_libraries_tw_extension_tags__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/libraries/tw-extension-tags */ "./src/lib/libraries/tw-extension-tags.js");
-/* harmony import */ var _components_library_library_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/library/library.jsx */ "./src/components/library/library.jsx");
-/* harmony import */ var _components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/action-menu/icon--sprite.svg */ "./src/components/action-menu/icon--sprite.svg");
-/* harmony import */ var _components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/tw-extension-config */ "./src/lib/tw-extension-config.js");
+/* harmony import */ var _components_library_library_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/library/library.jsx */ "./src/components/library/library.jsx");
+/* harmony import */ var _components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/action-menu/icon--sprite.svg */ "./src/components/action-menu/icon--sprite.svg");
+/* harmony import */ var _components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_10__);
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -26364,7 +26366,7 @@ const messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_4__["defineMessages"
 const toLibraryItem = extension => {
   if (typeof extension === 'object') {
     return _objectSpread({
-      rawURL: extension.iconURL || _components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_9___default.a
+      rawURL: extension.iconURL || _components_action_menu_icon_sprite_svg__WEBPACK_IMPORTED_MODULE_10___default.a
     }, extension);
   }
   return extension;
@@ -26375,7 +26377,7 @@ const translateGalleryItem = (extension, locale) => _objectSpread(_objectSpread(
 });
 let cachedGallery = null;
 const fetchLibrary = async () => {
-  const res = await fetch('https://extensions.turbowarp.org/generated-metadata/extensions-v0.json');
+  const res = await fetch(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["EXTENSION_METADATA_URL"]);
   if (!res.ok) {
     throw new Error("HTTP status ".concat(res.status));
   }
@@ -26386,8 +26388,8 @@ const fetchLibrary = async () => {
     description: extension.description,
     descriptionTranslations: extension.descriptionTranslations || {},
     extensionId: extension.id,
-    extensionURL: "https://extensions.turbowarp.org/".concat(extension.slug, ".js"),
-    iconURL: "https://extensions.turbowarp.org/".concat(extension.image || 'images/unknown.svg'),
+    extensionURL: Object(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["getExtensionScriptURL"])(extension.slug),
+    iconURL: Object(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["getExtensionIconURL"])(extension.image || 'images/unknown.svg'),
     tags: ['tw'],
     credits: [...(extension.original || []), ...(extension.by || [])].map(credit => {
       if (credit.link) {
@@ -26400,9 +26402,9 @@ const fetchLibrary = async () => {
       }
       return credit.name;
     }),
-    docsURI: extension.docs ? "https://extensions.turbowarp.org/".concat(extension.slug) : null,
+    docsURI: extension.docs ? Object(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["getExtensionDocsURL"])(extension.slug) : null,
     samples: extension.samples ? extension.samples.map(sample => ({
-      href: "".concat("", "editor?project_url=https://extensions.turbowarp.org/samples/").concat(encodeURIComponent(sample), ".sb3"),
+      href: "".concat(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["ROOT_PATH_FOR_LINKS"], "editor?project_url=").concat(Object(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["getExtensionSampleURL"])(sample)),
       text: sample
     })) : null,
     incompatibleWithScratch: !extension.scratchCompatible,
@@ -26485,7 +26487,7 @@ class ExtensionLibrary extends react__WEBPACK_IMPORTED_MODULE_2___default.a.Pure
         library.push(toLibraryItem(_lib_libraries_extensions_index_jsx__WEBPACK_IMPORTED_MODULE_6__["galleryLoading"]));
       }
     }
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_library_library_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_library_library_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       data: library,
       filterable: true,
       persistableKey: "extensionId",
@@ -33343,11 +33345,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_tw_security_manager_modal_security_manager_modal_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/tw-security-manager-modal/security-manager-modal.jsx */ "./src/components/tw-security-manager-modal/security-manager-modal.jsx");
 /* harmony import */ var _lib_tw_security_manager_constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/tw-security-manager-constants */ "./src/lib/tw-security-manager-constants.js");
 /* harmony import */ var _lib_tw_persisted_unsandboxed_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/tw-persisted-unsandboxed.js */ "./src/lib/tw-persisted-unsandboxed.js");
+/* harmony import */ var _lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/tw-extension-config */ "./src/lib/tw-extension-config.js");
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -33363,6 +33367,7 @@ function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = 
  * Set of extension URLs that the user has manually trusted to load unsandboxed.
  */
 const extensionsTrustedByUser = new Set();
+const trustedExtensionPrefixes = ['https://extensions.turbowarp.org/', 'http://localhost:8000/', _lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["EXTENSIONS_BASE_URL"]].filter(Boolean);
 const manuallyTrustExtension = url => {
   extensionsTrustedByUser.add(url);
 };
@@ -33372,11 +33377,13 @@ const manuallyTrustExtension = url => {
  * @param {string} url URL as a string.
  * @returns {boolean} True if the extension can is trusted
  */
-const isTrustedExtension = url =>
-// Always trust our official extension repostiory.
-url.startsWith('https://extensions.turbowarp.org/') ||
-// For development.
-url.startsWith('http://localhost:8000/') || extensionsTrustedByUser.has(url);
+const isTrustedExtension = url => trustedExtensionPrefixes.some(prefix => url.startsWith(prefix)) || extensionsTrustedByUser.has(url);
+let extensionBaseOrigin = null;
+try {
+  extensionBaseOrigin = new URL(_lib_tw_extension_config__WEBPACK_IMPORTED_MODULE_8__["EXTENSIONS_BASE_URL"]).origin;
+} catch (e) {
+  extensionBaseOrigin = null;
+}
 
 /**
  * Set of fetch resource hosts that were manually trusted by the user.
@@ -33396,7 +33403,7 @@ const embedHostsTrustedByUser = new Set();
  */
 const isAlwaysTrustedForFetching = parsed =>
 // If we would trust loading an extension from here, we can trust loading resources too.
-isTrustedExtension(parsed.href) ||
+isTrustedExtension(parsed.href) || extensionBaseOrigin && parsed.origin === extensionBaseOrigin ||
 // Any TurboWarp service such as trampoline
 parsed.origin === 'https://turbowarp.org' || parsed.origin.endsWith('.turbowarp.org') || parsed.origin.endsWith('.turbowarp.xyz') ||
 // GitHub API
@@ -38814,6 +38821,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _gallery_gallery_svg__WEBPACK_IMPORTED_MODULE_36___default = /*#__PURE__*/__webpack_require__.n(_gallery_gallery_svg__WEBPACK_IMPORTED_MODULE_36__);
 /* harmony import */ var _brand__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ../../brand */ "./src/lib/brand.js");
 /* harmony import */ var _brand__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/__webpack_require__.n(_brand__WEBPACK_IMPORTED_MODULE_37__);
+/* harmony import */ var _tw_extension_config__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ../../tw-extension-config */ "./src/lib/tw-extension-config.js");
 
 
 
@@ -38839,6 +38847,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
  // TODO: Rename file names to match variable/prop names?
+
 
 
 
@@ -38905,7 +38914,7 @@ __webpack_require__.r(__webpack_exports__);
     id: "tw.extension.faceSensing.name"
   }),
   extensionId: 'faceSensing',
-  extensionURL: 'https://extensions.turbowarp.org/lab/face-sensing.js',
+  extensionURL: Object(_tw_extension_config__WEBPACK_IMPORTED_MODULE_38__["getExtensionScriptURL"])('lab/face-sensing'),
   iconURL: _faceSensing_face_sensing_svg__WEBPACK_IMPORTED_MODULE_8___default.a,
   insetIconURL: _faceSensing_face_sensing_small_svg__WEBPACK_IMPORTED_MODULE_9___default.a,
   description: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -39135,7 +39144,7 @@ const galleryLoading = {
       APP_NAME: _brand__WEBPACK_IMPORTED_MODULE_37__["APP_NAME"]
     }
   }),
-  href: 'https://extensions.turbowarp.org/',
+  href: _tw_extension_config__WEBPACK_IMPORTED_MODULE_38__["EXTENSION_GALLERY_HREF"],
   extensionId: 'gallery',
   iconURL: _gallery_gallery_svg__WEBPACK_IMPORTED_MODULE_36___default.a,
   description: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"]
@@ -39155,7 +39164,7 @@ const galleryMore = {
       APP_NAME: _brand__WEBPACK_IMPORTED_MODULE_37__["APP_NAME"]
     }
   }),
-  href: 'https://extensions.turbowarp.org/',
+  href: _tw_extension_config__WEBPACK_IMPORTED_MODULE_38__["EXTENSION_GALLERY_HREF"],
   extensionId: 'gallery',
   iconURL: _gallery_gallery_svg__WEBPACK_IMPORTED_MODULE_36___default.a,
   description: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"]
@@ -39175,7 +39184,7 @@ const galleryError = {
       APP_NAME: _brand__WEBPACK_IMPORTED_MODULE_37__["APP_NAME"]
     }
   }),
-  href: 'https://extensions.turbowarp.org/',
+  href: _tw_extension_config__WEBPACK_IMPORTED_MODULE_38__["EXTENSION_GALLERY_HREF"],
   extensionId: 'gallery',
   iconURL: _gallery_gallery_svg__WEBPACK_IMPORTED_MODULE_36___default.a,
   description: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"]
@@ -41946,6 +41955,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _default_project__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./default-project */ "./src/lib/default-project/index.js");
 
 
+const getProjectUrl = id => "https://projects.scratch.mit.edu/".concat(id);
 
 /**
  * Wrapper for ScratchStorage which adds default web sources.
@@ -41954,6 +41964,10 @@ __webpack_require__.r(__webpack_exports__);
 class Storage extends _turbowarp_scratch_storage__WEBPACK_IMPORTED_MODULE_0___default.a {
   constructor() {
     super();
+    // Force assets to load from Scratch's asset host instead of any TurboWarp rewrites
+    this._store.encodeAssetURI = function (asset) {
+      return "https://assets.scratch.mit.edu/internalapi/asset/".concat(asset.assetId, ".").concat(asset.dataFormat, "/get/");
+    };
     this.cacheDefaultProject();
   }
   addOfficialScratchWebStores() {
@@ -41971,7 +41985,7 @@ class Storage extends _turbowarp_scratch_storage__WEBPACK_IMPORTED_MODULE_0___de
     this.projectToken = projectToken;
   }
   getProjectGetConfig(projectAsset) {
-    const path = "".concat(this.projectHost, "/").concat(projectAsset.assetId);
+    const path = getProjectUrl(projectAsset.assetId);
     const qs = this.projectToken ? "?token=".concat(this.projectToken) : '';
     return path + qs;
   }
@@ -42601,6 +42615,50 @@ const findIncompatibleUserscripts = () => {
   return errors;
 };
 const isBrowserSupported = () => isNewFunctionSupported() && isRendererSupported() && findIncompatibleUserscripts().length === 0;
+
+/***/ }),
+
+/***/ "./src/lib/tw-extension-config.js":
+/*!****************************************!*\
+  !*** ./src/lib/tw-extension-config.js ***!
+  \****************************************/
+/*! exports provided: EXTENSIONS_BASE_URL, EXTENSION_METADATA_URL, getExtensionScriptURL, getExtensionIconURL, getExtensionDocsURL, getExtensionSampleURL, EXTENSION_GALLERY_HREF, ROOT_PATH_FOR_LINKS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXTENSIONS_BASE_URL", function() { return EXTENSIONS_BASE_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXTENSION_METADATA_URL", function() { return EXTENSION_METADATA_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getExtensionScriptURL", function() { return getExtensionScriptURL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getExtensionIconURL", function() { return getExtensionIconURL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getExtensionDocsURL", function() { return getExtensionDocsURL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getExtensionSampleURL", function() { return getExtensionSampleURL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXTENSION_GALLERY_HREF", function() { return EXTENSION_GALLERY_HREF; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ROOT_PATH_FOR_LINKS", function() { return ROOT_PATH_FOR_LINKS; });
+const addTrailingSlash = url => url.endsWith('/') ? url : "".concat(url, "/");
+const getRootPath = () => {
+  const root =  false || '/';
+  const ensuredLeadingSlash = root.startsWith('/') ? root : "/".concat(root);
+  return ensuredLeadingSlash.endsWith('/') ? ensuredLeadingSlash : "".concat(ensuredLeadingSlash, "/");
+};
+const getDefaultExtensionsBase = () => {
+  const rootPath = getRootPath();
+  if (typeof window === 'undefined') {
+    // Fallback for tests or non-browser environments; relative paths still work when injected into pages.
+    return addTrailingSlash("".concat(rootPath, "extensions"));
+  }
+  return addTrailingSlash(new URL('extensions/', "".concat(window.location.origin).concat(rootPath)).toString());
+};
+const configuredBase = process.env.EXTENSIONS_BASE_URL || process.env.TW_EXTENSIONS_BASE_URL || null;
+const EXTENSIONS_BASE_URL = addTrailingSlash(configuredBase || getDefaultExtensionsBase());
+const EXTENSION_METADATA_URL = "".concat(EXTENSIONS_BASE_URL, "generated-metadata/extensions-v0.json");
+const getExtensionScriptURL = slug => "".concat(EXTENSIONS_BASE_URL).concat(slug, ".js");
+const getExtensionIconURL = path => "".concat(EXTENSIONS_BASE_URL).concat(path);
+const getExtensionDocsURL = slug => "".concat(EXTENSIONS_BASE_URL).concat(slug);
+const getExtensionSampleURL = sample => "".concat(EXTENSIONS_BASE_URL, "samples/").concat(encodeURIComponent(sample), ".sb3");
+const EXTENSION_GALLERY_HREF = EXTENSIONS_BASE_URL;
+const ROOT_PATH_FOR_LINKS = getRootPath();
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
