@@ -44338,9 +44338,7 @@ class Storage extends _turbowarp_scratch_storage__WEBPACK_IMPORTED_MODULE_0___de
   constructor() {
     super();
     // Force assets to load from Scratch's asset host instead of any TurboWarp rewrites
-    this._store.encodeAssetURI = function (asset) {
-      return "https://assets.scratch.mit.edu/internalapi/asset/".concat(asset.assetId, ".").concat(asset.dataFormat, "/get/");
-    };
+    this.setAssetHost('https://assets.scratch.mit.edu');
     this.cacheDefaultProject();
   }
   addOfficialScratchWebStores() {
